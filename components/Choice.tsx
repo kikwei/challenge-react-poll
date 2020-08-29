@@ -62,7 +62,7 @@ type Props = {
   disabled: boolean;
 };
 
-const Choice = ({
+export default function Choice({
   choice,
   backGroundColor,
   percentage,
@@ -70,7 +70,7 @@ const Choice = ({
   chosen,
   fontWeight,
   disabled,
-}: Props) => {
+}: Props) {
   return (
     <ChoicesWrapper onClick={() => handleVoting(choice)} disabled={disabled}>
       <WrapperDiv
@@ -97,6 +97,4 @@ const Choice = ({
       </WrapperDiv>
     </ChoicesWrapper>
   );
-};
-
-export default Choice;
+}

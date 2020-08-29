@@ -9,8 +9,6 @@ const VotesSpan = styled.span`
   color: #808080;
 `;
 
-const Votes = ({ votes }: Props) => {
+export default function Votes({ votes }: Props) {
   return <VotesSpan>{votes} Votes</VotesSpan>;
-};
-
-export default Votes;
+}

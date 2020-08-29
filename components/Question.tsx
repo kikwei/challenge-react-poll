@@ -4,8 +4,6 @@ type Props = {
   question: string;
 };
 
-const Question = ({ question }: Props) => {
+export default function Question({ question }: Props) {
   return <h3>{question}</h3>;
-};
-
-export default Question;
+}
