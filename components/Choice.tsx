@@ -93,7 +93,7 @@ const Choice = ({
         ) : (
           ''
         )}
-        <PercentageSpan>{percentage}%</PercentageSpan>
+        {disabled ? <PercentageSpan>{percentage}%</PercentageSpan> : ''}
       </WrapperDiv>
     </ChoicesWrapper>
   );
