@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { ChoicesCtxt } from './Context';
 
 const ChoicesWrapper = styled.div<{
   disabled?: boolean;
@@ -52,25 +53,28 @@ const NameSpan = styled.span`
   margin-bottom: 10px;
 `;
 
-type Props = {
-  choice: string;
-  backGroundColor: string;
-  percentage: number;
-  handleVoting: Function;
-  chosen: boolean;
-  fontWeight: string;
-  disabled: boolean;
-};
+// type Props = {
+// choice: string;
+// backGroundColor: string;
+// percentage: number;
+// handleVoting: Function;
+// chosen: boolean;
+// fontWeight: string;
+// disabled: boolean;
+// };
 
-export default function Choice({
-  choice,
-  backGroundColor,
-  percentage,
-  handleVoting,
-  chosen,
-  fontWeight,
-  disabled,
-}: Props) {
+export default function Choice() {
+  const CurrentContext = React.useContext(ChoicesCtxt);
+  const {
+    choice,
+    backGroundColor,
+    percentage,
+    handleVoting,
+    chosen,
+    fontWeight,
+    disabled,
+  } = CurrentContext;
+
   return (
     <ChoicesWrapper onClick={() => handleVoting(choice)} disabled={disabled}>
       <WrapperDiv

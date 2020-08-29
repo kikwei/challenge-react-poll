@@ -4,6 +4,7 @@ import { QandAsDocument } from '../types';
 import Question from './Question';
 import Choice from './Choice';
 import Votes from './Votes';
+import { ChoicesCtxt } from './Context';
 
 type Props = {
   qandas: QandAsDocument /* q and a's -- questions and answers document */;
@@ -73,36 +74,42 @@ export default function Poll({ qandas }: Props) {
       <Question question={question.text} />
       {choice === ''
         ? answers.map((answer: any, key: number) => (
-            <Choice
+            <ChoicesCtxt.Provider
+              value={{
+                choice: answer.text,
+                handleVoting: handleVoting,
+                chosen: choice === answer.text,
+                backGroundColor: '#ffffff',
+                percentage: 0,
+                fontWeight: 'normal',
+                disabled: choice !== '',
+              }}
               key={key}
-              choice={answer.text}
-              backGroundColor={'#ffffff'}
-              percentage={0}
-              handleVoting={handleVoting}
-              chosen={choice === answer.text}
-              fontWeight={'normal'}
-              disabled={choice !== ''}
-            />
+            >
+              <Choice />
+            </ChoicesCtxt.Provider>
           ))
         : answers.map((answer: any, key: number) => (
-            <Choice
+            <ChoicesCtxt.Provider
+              value={{
+                choice: answer.text,
+                handleVoting: handleVoting,
+                chosen: choice === answer.text,
+                backGroundColor:
+                  Math.round((answer.votes / votes) * 100) === highestPercentage
+                    ? '#00FFFF'
+                    : '#e0e0e0',
+                percentage: Math.round((answer.votes / votes) * 100),
+                fontWeight:
+                  Math.round((answer.votes / votes) * 100) === highestPercentage
+                    ? 'bold'
+                    : 'normal',
+                disabled: choice !== '',
+              }}
               key={key}
-              choice={answer.text}
-              backGroundColor={
-                Math.round((answer.votes / votes) * 100) === highestPercentage
-                  ? '#00FFFF'
-                  : '#e0e0e0'
-              }
-              percentage={Math.round((answer.votes / votes) * 100)}
-              handleVoting={handleVoting}
-              chosen={choice === answer.text}
-              fontWeight={
-                Math.round((answer.votes / votes) * 100) === highestPercentage
-                  ? 'bold'
-                  : 'normal'
-              }
-              disabled={choice !== ''}
-            />
+            >
+              <Choice />
+            </ChoicesCtxt.Provider>
           ))}
 
       <Votes votes={votes} />
