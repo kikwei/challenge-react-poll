@@ -33,18 +33,18 @@ export default function Poll({ qandas }: Props) {
   const { questions } = qandas;
 
   // Picking a random question
-  const [item] = React.useState(
+  const [randomQuiz] = React.useState(
     questions[Math.floor(Math.random() * questions.length)]
   );
 
   const [votes, setVotes] = React.useState(0);
 
   React.useEffect(() => {
-    const { answers, question } = item;
+    const { answers, question } = randomQuiz;
     setItems(answers);
     setQuestion(question.text);
     setVotes(totalVotes(answers));
-  }, [item]);
+  }, [randomQuiz]);
 
   //Calculate Total Votes
   const totalVotes = (answers: MappedAns[]) => {
