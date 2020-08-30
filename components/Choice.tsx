@@ -16,9 +16,9 @@ const ChoicesWrapper = styled.div<{
 `;
 
 const WrapperDiv = styled.div<{
-  spanWidth?: number;
-  spanBackGroundColor?: string;
-  fontWeight?: string;
+  spanWidth: number;
+  spanBackGroundColor: string;
+  fontWeight: string;
 }>`
   background: -webkit-linear-gradient(
     left,
