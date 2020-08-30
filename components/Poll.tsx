@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { QandAsDocument, QandA } from '../types';
+import { QandAsDocument } from '../types';
 import Question from './Question';
 import Choice from './Choice';
 import Votes from './Votes';
