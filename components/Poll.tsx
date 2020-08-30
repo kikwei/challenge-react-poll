@@ -99,11 +99,11 @@ export default function Poll({ qandas }: Props) {
               value={{
                 choice: answer.text,
                 handleVoting: handleVoting,
-                chosen: choice === answer.text,
+                isTheChosen: choice === answer.text,
                 backGroundColor: '#ffffff',
                 percentage: answer.percentage,
                 fontWeight: 'normal',
-                voted: choice !== '',
+                hasVoted: choice !== '',
               }}
               key={key}
             >
@@ -115,7 +115,7 @@ export default function Poll({ qandas }: Props) {
               value={{
                 choice: answer.text,
                 handleVoting: handleVoting,
-                chosen: choice === answer.text,
+                isTheChosen: choice === answer.text,
                 backGroundColor:
                   answer.percentage === highestPercentage
                     ? '#00FFFF'
@@ -123,7 +123,7 @@ export default function Poll({ qandas }: Props) {
                 percentage: answer.percentage,
                 fontWeight:
                   answer.percentage === highestPercentage ? 'bold' : 'normal',
-                voted: choice !== '',
+                hasVoted: choice !== '',
               }}
               key={key}
             >

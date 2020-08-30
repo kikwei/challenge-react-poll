@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { ChoicesCtxt } from './Context';
 
 const ChoicesWrapper = styled.div<{
-  voted?: boolean;
+  hasVoted?: boolean;
 }>`
   background-color: rgb(255, 255, 255);
   border: 1px solid rgb(227, 227, 227);
@@ -12,7 +12,7 @@ const ChoicesWrapper = styled.div<{
   margin-bottom: 15px;
   cursor: pointer;
   pointer-events: ${(props) =>
-    props.voted ? 'none' : 'normal'}; //Disable voting after one votes
+    props.hasVoted ? 'none' : 'normal'}; //Disable voting after one votes
 `;
 
 const WrapperDiv = styled.div<{
@@ -60,20 +60,20 @@ export default function Choice() {
     backGroundColor,
     percentage,
     handleVoting,
-    chosen,
+    isTheChosen,
     fontWeight,
-    voted,
+    hasVoted,
   } = CurrentContext;
 
   return (
-    <ChoicesWrapper onClick={() => handleVoting(choice)} voted={voted}>
+    <ChoicesWrapper onClick={() => handleVoting(choice)} hasVoted={hasVoted}>
       <WrapperDiv
         spanWidth={percentage}
         spanBackGroundColor={backGroundColor}
         fontWeight={fontWeight}
       >
         <NameSpan>{choice}</NameSpan>
-        {chosen ? (
+        {isTheChosen ? (
           <>
             <img
               src={require('../static/check-circle.svg')}
@@ -87,7 +87,7 @@ export default function Choice() {
         ) : (
           ''
         )}
-        {voted ? <PercentageSpan>{percentage}%</PercentageSpan> : ''}
+        {hasVoted ? <PercentageSpan>{percentage}%</PercentageSpan> : ''}
       </WrapperDiv>
     </ChoicesWrapper>
   );
