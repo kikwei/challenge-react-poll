@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { ChoicesCtxt } from './Context';
 
 const ChoicesWrapper = styled.div<{
-  disabled?: boolean;
+  voted?: boolean;
 }>`
   background-color: rgb(255, 255, 255);
   border: 1px solid rgb(227, 227, 227);
@@ -12,7 +12,7 @@ const ChoicesWrapper = styled.div<{
   margin-bottom: 15px;
   cursor: pointer;
   pointer-events: ${(props) =>
-    props.disabled ? 'none' : 'normal'}; //Disable voting after one votes
+    props.voted ? 'none' : 'normal'}; //Disable voting after one votes
 `;
 
 const WrapperDiv = styled.div<{
@@ -53,16 +53,6 @@ const NameSpan = styled.span`
   margin-bottom: 10px;
 `;
 
-// type Props = {
-// choice: string;
-// backGroundColor: string;
-// percentage: number;
-// handleVoting: Function;
-// chosen: boolean;
-// fontWeight: string;
-// disabled: boolean;
-// };
-
 export default function Choice() {
   const CurrentContext = React.useContext(ChoicesCtxt);
   const {
@@ -72,11 +62,11 @@ export default function Choice() {
     handleVoting,
     chosen,
     fontWeight,
-    disabled,
+    voted,
   } = CurrentContext;
 
   return (
-    <ChoicesWrapper onClick={() => handleVoting(choice)} disabled={disabled}>
+    <ChoicesWrapper onClick={() => handleVoting(choice)} voted={voted}>
       <WrapperDiv
         spanWidth={percentage}
         spanBackGroundColor={backGroundColor}
@@ -97,7 +87,7 @@ export default function Choice() {
         ) : (
           ''
         )}
-        {disabled ? <PercentageSpan>{percentage}%</PercentageSpan> : ''}
+        {voted ? <PercentageSpan>{percentage}%</PercentageSpan> : ''}
       </WrapperDiv>
     </ChoicesWrapper>
   );

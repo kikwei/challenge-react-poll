@@ -7,7 +7,7 @@ interface ChoicesState {
   backGroundColor: string;
   percentage: number;
   fontWeight: string;
-  disabled: boolean;
+  voted: boolean;
 }
 
 export const ChoicesCtxt = React.createContext({} as ChoicesState);

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { QandAsDocument } from '../types';
+import { QandAsDocument, QandA } from '../types';
 import Question from './Question';
 import Choice from './Choice';
 import Votes from './Votes';
@@ -8,6 +8,12 @@ import { ChoicesCtxt } from './Context';
 
 type Props = {
   qandas: QandAsDocument /* q and a's -- questions and answers document */;
+};
+
+type MappedAns = {
+  votes: number;
+  text: string;
+  percentage?: number;
 };
 
 const PollWrapper = styled.div`
@@ -19,6 +25,11 @@ const PollWrapper = styled.div`
 `;
 
 export default function Poll({ qandas }: Props) {
+  const [choice, setChoice] = React.useState('');
+  const [question, setQuestion] = React.useState('');
+  const [highestPercentage, setHighestPercentage] = React.useState(0);
+  const [items, setItems] = React.useState<MappedAns[]>([]);
+
   const { questions } = qandas;
 
   // Picking a random question
@@ -26,93 +37,100 @@ export default function Poll({ qandas }: Props) {
     questions[Math.floor(Math.random() * questions.length)]
   );
 
-  // Access the answers and question from the randomly picked question
-  const { answers, question } = item;
+  const [votes, setVotes] = React.useState(0);
 
-  // Get the initial total votes
-  const [votes, setVotes] = React.useState(
-    answers.reduce(
+  React.useEffect(() => {
+    const { answers, question } = item;
+    setItems(answers);
+    setQuestion(question.text);
+    setVotes(totalVotes(answers));
+  }, [item]);
+
+  //Calculate Total Votes
+  const totalVotes = (answers: MappedAns[]) => {
+    return answers.reduce(
       (previous: number, current: any) => previous + current.votes,
       0
-    )
-  );
+    );
+  };
 
-  const [choice, setChoice] = React.useState('');
-  const [highestPercentage, setHighestPercentage] = React.useState(0);
+  // Get votes percentages
+  const setPercentages = (answers: MappedAns[]) => {
+    const votesSum: number = totalVotes(answers);
+
+    const answesWithPercentages = answers.map((answer) => ({
+      ...answer,
+      percentage: Math.round((answer.votes / votesSum) * 100),
+    }));
+
+    setItems(answesWithPercentages);
+
+    let percentages: number[] = [];
+
+    answesWithPercentages.forEach((answer) =>
+      percentages.push(answer.percentage)
+    );
+
+    //Set the total votes
+    setVotes(votesSum);
+
+    setHighestPercentage(Math.max(...percentages));
+  };
 
   // Handle click event on voting
   const handleVoting: Function = (choice: string) => {
     // Set the chosen answer
     setChoice(choice);
 
-    // Increse votes count of the chosen answer by 1
-    answers.map((answer) =>
-      answer.text === choice ? { text: choice, votes: answer.votes++ } : answer
+    // Increase votes count of the chosen answer by 1
+    items.map((answer) =>
+      answer.text === choice ? { ...answer, votes: answer.votes++ } : answer
     );
 
-    // Votes summation
-    let totalVotes: number = answers.reduce(
-      (previous: number, current: any) => previous + current.votes,
-      0
-    );
-
-    // Set the total votes
-    setVotes(totalVotes);
-
-    // Calculate percentages and set the highest percentage
-    let percentages: number[] = [];
-
-    answers.forEach((choice) =>
-      percentages.push(Math.round((choice.votes / totalVotes) * 100))
-    );
-
-    setHighestPercentage(Math.max(...percentages));
+    setPercentages(items);
   };
 
   return (
     <PollWrapper>
-      <Question question={question.text} />
+      <Question question={question} />
       {choice === ''
-        ? answers.map((answer: any, key: number) => (
+        ? items.map((answer: any, key: number) => (
             <ChoicesCtxt.Provider
               value={{
                 choice: answer.text,
                 handleVoting: handleVoting,
                 chosen: choice === answer.text,
                 backGroundColor: '#ffffff',
-                percentage: 0,
+                percentage: answer.percentage,
                 fontWeight: 'normal',
-                disabled: choice !== '',
+                voted: choice !== '',
               }}
               key={key}
             >
               <Choice />
             </ChoicesCtxt.Provider>
           ))
-        : answers.map((answer: any, key: number) => (
+        : items.map((answer: any, key: number) => (
             <ChoicesCtxt.Provider
               value={{
                 choice: answer.text,
                 handleVoting: handleVoting,
                 chosen: choice === answer.text,
                 backGroundColor:
-                  Math.round((answer.votes / votes) * 100) === highestPercentage
+                  answer.percentage === highestPercentage
                     ? '#00FFFF'
                     : '#e0e0e0',
-                percentage: Math.round((answer.votes / votes) * 100),
+                percentage: answer.percentage,
                 fontWeight:
-                  Math.round((answer.votes / votes) * 100) === highestPercentage
-                    ? 'bold'
-                    : 'normal',
-                disabled: choice !== '',
+                  answer.percentage === highestPercentage ? 'bold' : 'normal',
+                voted: choice !== '',
               }}
               key={key}
             >
               <Choice />
             </ChoicesCtxt.Provider>
           ))}
-
-      <Votes votes={votes} />
+      <Votes votes={votes} />{' '}
     </PollWrapper>
   );
 }
